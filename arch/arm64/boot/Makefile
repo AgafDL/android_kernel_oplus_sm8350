@@ -16,7 +16,7 @@
 
 OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
 
-targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
+targets := Image
 
 ifeq ($(CONFIG_QCOM_RTIC),y)
 # Add RTIC DTB to the DTB list if RTIC MPGen is enabled

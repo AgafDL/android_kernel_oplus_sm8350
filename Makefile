@@ -655,6 +655,10 @@ ifdef building_out_of_srctree
 	{ echo "# this is build directory, ignore it"; echo "*"; } > .gitignore
 endif
 
+PLATFORM_VERSION ?= 13.0
+@echo "PLATFORM_VERSION: $(PLATFORM_VERSION)"
+export PLATFORM_VERSION
+
 ifneq ($(shell $(CC) --version 2>&1 | grep clang),)
 ifneq ($(CROSS_COMPILE),)
 CLANG_TRIPLE	?= $(CROSS_COMPILE)

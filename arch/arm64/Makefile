@@ -149,7 +149,7 @@ endif
 
 # Default target when executing plain make
 boot		:= arch/arm64/boot
-KBUILD_IMAGE	:= $(boot)/$(KBUILD_TARGET)
+KBUILD_IMAGE	:= Image
 
 all:	$(KBUILD_TARGET)
 

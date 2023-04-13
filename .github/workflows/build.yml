@@ -1,0 +1,62 @@
+name: Build Void Kernel
+
+on:
+    workflow_dispatch:
+        inputs:
+            DEVICE_NAME:
+                description: 'Your Device Codename'
+                required: true
+                default: 'RMX3461'
+            ANDROID_VERSION:
+                description: 'Your Android Version'
+                required: true
+                default: 't-oss'
+permissions:
+   contents: write
+
+jobs:
+    build:
+        if: github.event.repository.owner.id == github.event.sender.id
+        runs-on: ubuntu-20.04
+        permissions:
+            contents: write
+        steps:
+        - name: Display Run Parameters
+          run: |
+            echo "::group::User Environment Variables"
+            echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
+            echo "Android Version: ${{ github.event.inputs.ANDROID_VERSION }}"
+            
+        # You might want to Checkout your repo first, but not mandatory
+        - name: Check Out
+          uses: actions/checkout@v3
+          
+        - name: Start Building Kernel
+          run: |
+            ./build.sh
+            
+        - name: Upload to Release
+          uses: ncipollo/release-action@v1.11.1
+          with:
+            artifacts: |
+                *.zip
+                *.log
+            name: Custom Kernel - Build ${{ steps.props.outputs.date }}
+            draft: false
+            prerelease: false
+            allowUpdates: true
+            tag: ${{ github.run_id }}
+            token: ${{ secrets.GITHUB_TOKEN }}
+            body: |
+                ## Void Kernel Built via Github Actions for ${{ github.event.inputs.DEVICE_NAME }} - ${{ github.event.inputs.ANDROID_VERSION }}
+                - Notes:
+                  - Uploaded recovery flashable android kernel.
+                  - Read my instruction below first.
+                - Flash:
+                  - Download compiled kernel zip, save it on your device or computer.
+                  - Flash it via adb sideload, twrp or any other custom recovery.
+                  
+        - name: Link of Release
+          run: |
+            echo "Enjoy your Newly Built Kernel"
+            echo "https://github.com/${GITHUB_REPOSITORY}/releases/tag/${{ github.run_id }}-${{ steps.props.outputs.date }}"

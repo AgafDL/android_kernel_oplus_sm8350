@@ -1,4 +1,3 @@
-sudo su
 #!/bin/bash
 
 function compile() 
